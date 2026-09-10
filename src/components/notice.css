@@ -1,0 +1,20 @@
+/* Notice — Hinweis-/Statusbox mit linker Akzentkante. */
+.sonn-notice {
+  border-left: 4px solid var(--sonn-heading-gold);
+  background: var(--sonn-navy-tint);
+  padding: 15px 20px;
+  border-radius: 0 var(--sonn-radius) var(--sonn-radius) 0;
+  font-size: 14.5px;
+  color: var(--sonn-navy);
+}
+.sonn-notice__title {
+  font-weight: 700;
+}
+.sonn-notice--success {
+  border-left-color: var(--sonn-ok);
+  background: var(--sonn-ok-bg);
+}
+.sonn-notice--warning {
+  border-left-color: var(--sonn-warn);
+  background: var(--sonn-warn-bg);
+}

@@ -1,0 +1,10 @@
+/* Sonnhalde Design-System — vollstaendige Style-Huelle.
+   Diese Datei ist der einzige Einstieg: Tokens + alle Komponenten-Styles.
+   Einbinden: import "@sonnhalde/design-system/styles.css"; */
+@import "./tokens.css";
+@import "./components/heading.css";
+@import "./components/button.css";
+@import "./components/card.css";
+@import "./components/field.css";
+@import "./components/notice.css";
+@import "./components/header.css";

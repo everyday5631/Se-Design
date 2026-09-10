@@ -1,0 +1,67 @@
+/* ============================================================
+   SONNHALDE — Design-Tokens
+   Verbindliche Palette · Arial durchgaengig · warm, wuerdevoll.
+   Tokens liegen auf :root UND auf .sonn-root, damit sowohl global
+   als auch innerhalb des <SonnhaldeProvider> gestylt wird.
+   ============================================================ */
+:root,
+.sonn-root {
+  /* --- Grundfarben (verbindlich) --- */
+  --sonn-navy: #233446;
+  --sonn-logo-gold: #efbb50;
+  --sonn-heading-gold: #c8962e;
+  --sonn-cream: #fdf9f6;
+
+  /* --- Abgeleitete Stuetzfarben --- */
+  --sonn-navy-tint: #e7ebef;
+  --sonn-navy-deep: #1a2836;
+  --sonn-stone: #6b6459;
+  --sonn-line: #dcd4c9;
+  --sonn-gold-deep: #a97c22;
+  --sonn-surface: #ffffff;
+  --sonn-cream-sink: #f6efe8;
+
+  /* --- Semantische Signalfarben (nur Status, kein Akzent) --- */
+  --sonn-ok: #3f6b4c;
+  --sonn-ok-bg: #e7efe8;
+  --sonn-warn: #8a5a1e;
+  --sonn-warn-bg: #f6e9d6;
+  --sonn-error: #b23b3b;
+
+  /* --- Typografie --- */
+  --sonn-font: Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+  /* --- Schriftgroessen-Skala --- */
+  --sonn-size-display: 48px;
+  --sonn-size-h2: 32px;
+  --sonn-size-h3: 24px;
+  --sonn-size-h4: 20px;
+  --sonn-size-lead: 18px;
+  --sonn-size-body: 16px;
+  --sonn-size-label: 13px;
+  --sonn-size-caption: 12px;
+
+  /* --- Radius, Abstaende, Linien --- */
+  --sonn-radius: 3px;
+  --sonn-rule: 3px;
+  --sonn-space-1: 4px;
+  --sonn-space-2: 8px;
+  --sonn-space-3: 12px;
+  --sonn-space-4: 16px;
+  --sonn-space-5: 24px;
+  --sonn-space-6: 32px;
+  --sonn-space-7: 48px;
+
+  /* --- Fokus --- */
+  --sonn-focus-ring: 3px solid var(--sonn-logo-gold);
+}
+
+/* Basis-Setzung fuer den Provider-Wrapper. */
+.sonn-root {
+  font-family: var(--sonn-font);
+  color: var(--sonn-navy);
+  background: var(--sonn-cream);
+  font-size: var(--sonn-size-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}

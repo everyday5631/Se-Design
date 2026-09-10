@@ -1,0 +1,102 @@
+/* Header-Muster — Dokument-/PDF-Kopf und interne Werkzeug-Kopfzeile. */
+
+/* DocumentHeader — Navy-Fläche mit Logo-Gold-Kante, für Word/PDF/Flyer. */
+.sonn-docheader {
+  background: var(--sonn-navy);
+  color: var(--sonn-cream);
+  padding: 22px 24px;
+  position: relative;
+  border-radius: var(--sonn-radius) var(--sonn-radius) 0 0;
+}
+.sonn-docheader::after {
+  content: "";
+  position: absolute;
+  left: 24px;
+  bottom: 0;
+  width: 72px;
+  height: 3px;
+  background: var(--sonn-logo-gold);
+}
+.sonn-docheader__brand {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9fb0bf;
+  margin-bottom: 12px;
+}
+.sonn-docheader__kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sonn-logo-gold);
+}
+.sonn-docheader__title {
+  font-family: var(--sonn-font);
+  font-weight: 700;
+  color: var(--sonn-cream);
+  font-size: 21px;
+  margin: 6px 0 0;
+}
+
+/* AppBar — Kopfzeile eines internen Web-Werkzeugs. */
+.sonn-appbar {
+  border: 1px solid var(--sonn-line);
+  border-radius: var(--sonn-radius);
+  overflow: hidden;
+  background: var(--sonn-surface);
+}
+.sonn-appbar__top {
+  background: var(--sonn-navy);
+  color: var(--sonn-cream);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.sonn-appbar__brand {
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: var(--sonn-cream);
+}
+.sonn-appbar__brand-accent {
+  color: var(--sonn-logo-gold);
+}
+.sonn-appbar__nav {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.sonn-appbar__link {
+  color: #c8d2dc;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: var(--sonn-radius);
+}
+.sonn-appbar__link:hover {
+  color: var(--sonn-cream);
+}
+.sonn-appbar__link.is-active {
+  background: var(--sonn-heading-gold);
+  color: var(--sonn-navy);
+}
+.sonn-appbar__body {
+  padding: 20px;
+}
+.sonn-appbar__crumb {
+  font-size: 12px;
+  color: var(--sonn-stone);
+}
+.sonn-appbar__heading {
+  font-family: var(--sonn-font);
+  font-weight: 700;
+  color: var(--sonn-navy);
+  font-size: 20px;
+  margin: 6px 0 0;
+}

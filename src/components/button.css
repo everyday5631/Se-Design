@@ -1,0 +1,60 @@
+/* Button — primaer/sekundaer/leise, auf Hell und auf Navy. */
+.sonn-btn {
+  font-family: var(--sonn-font);
+  font-weight: 700;
+  font-size: 14.5px;
+  line-height: 1.1;
+  padding: 12px 24px;
+  border-radius: var(--sonn-radius);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.sonn-btn:focus-visible {
+  outline: var(--sonn-focus-ring);
+  outline-offset: 2px;
+}
+.sonn-btn--primary {
+  background: var(--sonn-heading-gold);
+  color: var(--sonn-navy);
+}
+.sonn-btn--primary:hover {
+  background: var(--sonn-gold-deep);
+  color: var(--sonn-cream);
+}
+.sonn-btn--secondary {
+  background: transparent;
+  color: var(--sonn-navy);
+  border-color: var(--sonn-navy);
+}
+.sonn-btn--secondary:hover {
+  background: var(--sonn-navy);
+  color: var(--sonn-cream);
+}
+.sonn-btn--quiet {
+  background: transparent;
+  color: var(--sonn-gold-deep);
+  border-color: transparent;
+  padding-inline: 8px;
+}
+.sonn-btn--quiet:hover {
+  color: var(--sonn-navy);
+  text-decoration: underline;
+}
+.sonn-btn--on-navy {
+  background: var(--sonn-logo-gold);
+  color: var(--sonn-navy);
+}
+.sonn-btn--on-navy:hover {
+  background: #f6cb6e;
+}
+.sonn-btn:disabled,
+.sonn-btn[aria-disabled="true"] {
+  opacity: 0.42;
+  cursor: not-allowed;
+  pointer-events: none;
+}

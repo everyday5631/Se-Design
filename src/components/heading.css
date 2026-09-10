@@ -1,0 +1,46 @@
+/* SectionHeading — Eyebrow, Titel und das tragende Gold-Linien-System. */
+.sonn-heading {
+  max-width: 640px;
+}
+.sonn-heading__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sonn-gold-deep);
+  margin: 0 0 10px;
+}
+.sonn-heading__title {
+  font-family: var(--sonn-font);
+  font-weight: 700;
+  color: var(--sonn-navy);
+  font-size: var(--sonn-size-h2);
+  line-height: 1.15;
+  margin: 0;
+  text-wrap: balance;
+}
+.sonn-heading__rule {
+  width: 64px;
+  height: var(--sonn-rule);
+  background: var(--sonn-heading-gold);
+  border: none;
+  margin: 18px 0 0;
+}
+.sonn-heading__lead {
+  color: var(--sonn-stone);
+  font-size: var(--sonn-size-lead);
+  margin: 14px 0 0;
+  max-width: 62ch;
+}
+
+/* Eigenstaendiges Gold-Linien-Element zur freien Verwendung. */
+.sonn-rule {
+  width: 64px;
+  height: var(--sonn-rule);
+  background: var(--sonn-heading-gold);
+  border: none;
+}
+.sonn-rule--tall {
+  height: 4px;
+  width: 80px;
+}

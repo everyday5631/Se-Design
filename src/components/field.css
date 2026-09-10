@@ -1,0 +1,54 @@
+/* Formularfelder — Text, Auswahl, mehrzeilig; mit Fokus-, Fehler- und Pflichtzustand. */
+.sonn-field {
+  display: block;
+}
+.sonn-field__label {
+  display: block;
+  font-size: var(--sonn-size-label);
+  font-weight: 700;
+  color: var(--sonn-navy);
+  margin-bottom: 7px;
+}
+.sonn-field__req {
+  color: var(--sonn-gold-deep);
+}
+.sonn-field__control {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--sonn-line);
+  border-radius: var(--sonn-radius);
+  background: var(--sonn-surface);
+  font-family: var(--sonn-font);
+  font-size: 15px;
+  color: var(--sonn-navy);
+}
+textarea.sonn-field__control {
+  resize: vertical;
+  min-height: 88px;
+}
+.sonn-field__control::placeholder {
+  color: #9a9284;
+}
+.sonn-field__control:hover {
+  border-color: #c3baac;
+}
+.sonn-field__control:focus {
+  outline: none;
+  border-color: var(--sonn-heading-gold);
+  box-shadow: 0 0 0 3px rgba(200, 150, 46, 0.22);
+}
+.sonn-field__help {
+  font-size: 12.5px;
+  color: var(--sonn-stone);
+  margin-top: 6px;
+}
+.sonn-field__error {
+  font-size: 12.5px;
+  color: var(--sonn-error);
+  font-weight: 700;
+  margin-top: 6px;
+}
+.sonn-field--error .sonn-field__control {
+  border-color: var(--sonn-error);
+  box-shadow: 0 0 0 3px rgba(178, 59, 59, 0.16);
+}
