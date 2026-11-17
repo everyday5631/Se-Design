@@ -58,3 +58,14 @@ Auszeichnungen auf Hell das dunklere Gold-Deep.
 - `TextField` · `SelectField` · `TextareaField`
 - `Notice` — `info` · `success` · `warning`
 - `DocumentHeader` · `AppBar`
+
+## Logos und Marken-Definition
+
+Die Logos des Grafikers (SVG, PNG/JPG, Druck-PDF in 4C und Pantone, EPS-Originale) und
+das Definitionen-Blatt liegen unter [`brand/`](brand/README.md). Die offiziellen
+Farbwerte des Grafikers (Sonnengelb `#F9B119`, Anthrazit `#282828`, Dunkelblau `#233446`)
+stehen zusätzlich in `src/tokens-official.css`; die Tokens oben sind unverändert.
+
+**Offen:** Das Definitionen-Blatt nennt **Open Sans** und **Source Serif Pro** als Schriften,
+dieses System verwendet durchgängig Arial. Dunkelblau ist im Blatt mit `#233446` beschriftet,
+aber etwa `#00263F` gemalt; die Klärung beim Grafiker steht aus.
