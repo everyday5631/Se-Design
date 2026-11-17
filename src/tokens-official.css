@@ -1,0 +1,13 @@
+/* Offizielle Farbwerte des Grafikers (eightynine.ch), aus «SONNHALDE Definitionen»,
+   Oktober 2024. Zusätzlich zu tokens.css; ersetzt dort nichts.
+   Nicht in styles.css eingebunden (bewusst): erst wenn entschieden ist, ob die offiziellen Werte
+   die bisherigen Gold- und Navy-Töne ersetzen. Namen mit Präfix --sonn-official-. */
+:root,
+.sonn-root {
+  --sonn-official-sonnengelb: #f9b119;  /* Logo und Flächen; als Text auf Weiss/Cream nur 1.85:1 */
+  --sonn-official-anthrazit: #282828;   /* Text; 7.95:1 auf Sonnengelb, 14.08:1 auf Cream */
+  --sonn-official-dunkelblau: #233446;  /* Wert laut Beschriftung des Blatts; entspricht --sonn-navy */
+  --sonn-official-dunkelblau-gemalt: #00263f;  /* so gemalt im Blatt (gemessen); Klärung beim Grafiker offen */
+  --sonn-official-web-grau: #ac9f95;    /* Farbpalette Website; als Text auf Cream nur 2.46:1 */
+  --sonn-official-web-creme: #fdf9f6;   /* Farbpalette Website; entspricht --sonn-cream */
+}
