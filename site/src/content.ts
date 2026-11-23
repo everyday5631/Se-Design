@@ -14,6 +14,10 @@ export interface SiteData {
   /** Dateinamen aus brand/vektor (SVG) und brand/bildschirm (PNG/JPG). */
   svgFiles: string[];
   rasterFiles: string[];
+  /** PDF-Dateinamen aus brand/druck. */
+  druckFiles: string[];
+  /** Dateien aus brand/original, relativer Pfad und Grösse in Bytes. */
+  originalFiles: { path: string; size: number }[];
 }
 
 export const ROLES: Record<string, string> = {
@@ -76,6 +80,9 @@ export const NAV = [
   { path: "typografie", label: "Typografie" },
   { path: "abstaende", label: "Abstände & Form" },
   { path: "logo", label: "Logo" },
+  { path: "druck", label: "Druckdaten" },
+  { path: "definitionen", label: "Definitionen" },
+  { path: "originale", label: "Originale" },
   { path: "komponenten", label: "Komponenten" },
 ] as const;
 

@@ -82,6 +82,13 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .9em; b
 .logo figcaption { display: flex; justify-content: space-between; gap: var(--sonn-space-3); align-items: center; padding: var(--sonn-space-3) var(--sonn-space-4); border-top: 1px solid var(--sonn-line); font-size: var(--sonn-size-label); }
 .logo__links { display: flex; gap: var(--sonn-space-3); color: var(--sonn-stone); }
 
+/* Downloads */
+.docs__h3 { font-size: var(--sonn-size-h4); margin: var(--sonn-space-6) 0 var(--sonn-space-3); }
+.dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: var(--sonn-space-2); border: 1px solid var(--sonn-line); }
+.table-scroll { overflow-x: auto; }
+.table-scroll .docs__table { min-width: 720px; }
+.pdf { width: 100%; height: 640px; border: 1px solid var(--sonn-line); background: var(--sonn-surface); }
+
 /* Komponenten */
 .component { border-top: 1px solid var(--sonn-line); }
 .component .docs__h2 { margin-top: var(--sonn-space-5); }

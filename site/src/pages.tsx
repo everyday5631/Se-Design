@@ -158,6 +158,9 @@ const TILE_TEXT: Record<string, string> = {
   typografie: "Arial und die Schriftgrössen-Skala.",
   abstaende: "Abstände, Linienstärke und Eckenradius.",
   logo: "Alle Logo-Varianten als SVG und PNG zum Herunterladen.",
+  druck: "Logos als Druck-PDF in 4C und Pantone.",
+  definitionen: "Das Blatt «SONNHALDE Definitionen» des Grafikers mit allen Farbwerten.",
+  originale: "Die unveränderte Lieferung des Grafikers (EPS, SVG, PNG, PDF).",
   komponenten: "React-Komponenten mit Live-Vorschau, Code und Eigenschaften.",
 };
 
@@ -400,9 +403,147 @@ function Logos({ data }: { data: SiteData }) {
         </section>
       ))}
       <p className="docs__lead">
-        Druckdaten (4C und Pantone) und die Definitionen des Grafikers liegen im Repository unter{" "}
-        <code>brand/</code> und sind hier bewusst nicht veröffentlicht.
+        Für den Druck gibt es die <a href="../druck/">Druckdaten</a> (4C und Pantone), die Rohlieferung
+        des Grafikers liegt unter <a href="../originale/">Originale</a>.
       </p>
+    </>
+  );
+}
+
+function formatSize(b: number): string {
+  return b >= 1024 * 1024 ? `${(b / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`;
+}
+
+const enc = (p: string) => p.split("/").map(encodeURIComponent).join("/");
+
+function Druck({ data }: { data: SiteData }) {
+  const sets: [string, string][] = [
+    ["4C", "4C (CMYK)"],
+    ["Pantone", "Pantone (Sonderfarben)"],
+  ];
+  return (
+    <>
+      <SectionHeading
+        as="h1"
+        eyebrow="Marke"
+        title="Druckdaten"
+        lead="Logos als PDF, umgewandelt aus den EPS-Dateien des Grafikers. Pfade und Farben bleiben unverändert."
+      />
+      <ul className="docs__list">
+        <li><b>4C</b> ist DeviceCMYK, zum Beispiel Sonnengelb 0 / 35 / 92 / 0 und Anthrazit 0 / 0 / 0 / 90.</li>
+        <li><b>Pantone</b> trägt Sonderfarben: Sonnengelb als Pantone 129U / 137C. Es gibt keine Pantone-Fassung «neg».</li>
+        <li>Weisse Dateien («neg») erscheinen auf weissem Grund leer. Das ist richtig.</li>
+      </ul>
+      {sets.map(([key, title]) => (
+        <section key={key}>
+          <h2 className="docs__h2">{title}</h2>
+          <FileTable
+            rows={data.druckFiles
+              .filter((f) => f.endsWith(`-${key}.pdf`))
+              .map((f) => ({ name: f, href: `../assets/druck/${encodeURIComponent(f)}` }))}
+          />
+        </section>
+      ))}
+    </>
+  );
+}
+
+function FileTable({ rows }: { rows: { name: string; href: string; size?: number }[] }) {
+  return (
+    <table className="docs__table">
+      <thead>
+        <tr><th>Datei</th><th>Grösse</th></tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r.href}>
+            <td><a href={r.href} download>{r.name}</a></td>
+            <td>{r.size ? formatSize(r.size) : ""}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function Definitions() {
+  const pdf = "../assets/definitionen/SONNHALDE-Definitionen.pdf";
+  const rows = [
+    ["Sonnhalde Sonnengelb", "129U / 137C", "0 35 92 0", "249 177 25", "#F9B119", "1037 Sonnengelb", "764 Saffron"],
+    ["Sonnhalde Anthrazit", "Black 3U", "0 0 0 90", "40 40 40", "#282828", "7021 Schwarzgrau", "759 Komatsu Grey"],
+    ["Sonnhalde Dunkelblau", "655U / 539C", "100 60 25 70", "35 52 70", "#233446", "5011 Stahlblau", "724-01 Alfa Blue"],
+  ];
+  return (
+    <>
+      <SectionHeading
+        as="h1"
+        eyebrow="Marke"
+        title="Definitionen"
+        lead="«SONNHALDE Definitionen — Logos und Farben», A3-Blatt von eightynine.ch, Oktober 2024."
+      />
+      <p><a href={pdf} download>PDF herunterladen</a></p>
+      <h2 className="docs__h2">Farben</h2>
+      <p className="docs__lead">Wörtlich aus dem Blatt übernommen.</p>
+      <div className="table-scroll">
+        <table className="docs__table">
+          <thead>
+            <tr><th>Farbe</th><th>Pantone</th><th>CMYK</th><th>RGB</th><th>HEX</th><th>RAL</th><th>Avery</th></tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r[0]}>
+                <td>
+                  <span className="dot" style={{ background: r[4] }} />
+                  {r[0]}
+                </td>
+                {r.slice(1).map((c, i) => <td key={i}>{c}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul className="docs__list">
+        <li><b>Farbpalette Website:</b> Anthrazit, Dunkelblau, Sonnengelb und zwei weitere, beschriftet mit <code>#AC9F95</code> (warmes Grau, ohne Namen) und <code>#FDF9F6</code> (Cream).</li>
+        <li><b>Schriften laut Blatt:</b> Open Sans und Source Serif Pro. Das Design-System verwendet durchgängig Arial.</li>
+        <li>Das Blatt nennt keine Schutzräume, Mindestgrössen und keinen Einsatzbereich der Schriften.</li>
+      </ul>
+      <Notice tone="warning" title="Beim Grafiker zu klären.">
+        Das Dunkelblau ist mit #233446 beschriftet, die Farbfläche und die blauen Logoflächen sind aber etwa
+        #00263F gemalt (gemessen am gerasterten Blatt).
+      </Notice>
+      <h2 className="docs__h2">Vorschau</h2>
+      <iframe className="pdf" src={pdf} title="SONNHALDE Definitionen" />
+    </>
+  );
+}
+
+function Originals({ data }: { data: SiteData }) {
+  const total = data.originalFiles.reduce((a, f) => a + f.size, 0);
+  const folders = new Map<string, { path: string; size: number }[]>();
+  for (const f of data.originalFiles) {
+    const dir = f.path.includes("/") ? f.path.slice(0, f.path.lastIndexOf("/")) : "";
+    folders.set(dir, [...(folders.get(dir) ?? []), f]);
+  }
+  return (
+    <>
+      <SectionHeading
+        as="h1"
+        eyebrow="Marke"
+        title="Originale"
+        lead={`Die unveränderte Lieferung des Grafikers (eightynine.ch), ${data.originalFiles.length} Dateien, ${formatSize(total)}. Hier liegen auch die EPS-Dateien.`}
+      />
+      {[...folders.entries()].map(([dir, files]) => (
+        <section key={dir}>
+          <h2 className="docs__h3">{dir.replace(/^02 SONNHALDE Logos\//, "")}</h2>
+          <FileTable
+            rows={files.map((f) => ({
+              name: f.path.slice(f.path.lastIndexOf("/") + 1),
+              href: `../assets/original/${enc(f.path)}`,
+              size: f.size,
+            }))}
+          />
+        </section>
+      ))}
     </>
   );
 }
@@ -646,6 +787,9 @@ export function renderSite(data: SiteData): { path: string; html: string }[] {
     { path: "typografie", title: "Typografie", body: <Typography data={data} /> },
     { path: "abstaende", title: "Abstände & Form", body: <Spacing data={data} /> },
     { path: "logo", title: "Logo", body: <Logos data={data} /> },
+    { path: "druck", title: "Druckdaten", body: <Druck data={data} /> },
+    { path: "definitionen", title: "Definitionen", body: <Definitions /> },
+    { path: "originale", title: "Originale", body: <Originals data={data} /> },
     { path: "komponenten", title: "Komponenten", body: <Components /> },
   ];
   return pages.map((p) => ({

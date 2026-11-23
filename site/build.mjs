@@ -2,7 +2,7 @@
 //   node site/build.mjs           -> site-dist/
 // Keine neuen Abhaengigkeiten: esbuild und react-dom sind bereits vorhanden.
 import { build } from "esbuild";
-import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -41,9 +41,32 @@ const data = {
   official: parseVars("src/tokens-official.css"),
   svgFiles: readdirSync(join(root, "brand/vektor")).filter((f) => f.endsWith(".svg")).sort(),
   rasterFiles: readdirSync(join(root, "brand/bildschirm")).filter((f) => /\.(png|jpg)$/i.test(f)).sort(),
+  druckFiles: readdirSync(join(root, "brand/druck")).filter((f) => f.endsWith(".pdf")).sort(),
+  originalFiles: [],
 };
 
-// 3) Nur Logos veroeffentlichen (SVG + PNG), nicht brand/original, druck oder definitionen
+// Alle Dateien unter brand/original rekursiv sammeln (relativ zu brand/original)
+function walk(dir, rel = "") {
+  for (const e of readdirSync(join(dir, rel), { withFileTypes: true })) {
+    const r = rel ? `${rel}/${e.name}` : e.name;
+    if (e.isDirectory()) walk(dir, r);
+    else data.originalFiles.push({ path: r, size: statSync(join(dir, r)).size });
+  }
+}
+walk(join(root, "brand/original"));
+data.originalFiles.sort((a, b) => a.path.localeCompare(b.path, "de"));
+
+// 3) Brand-Dateien kopieren: Logos (SVG/PNG), Druckdaten, Definitionen und Originale des Grafikers
+mkdirSync(join(out, "assets/druck"), { recursive: true });
+mkdirSync(join(out, "assets/definitionen"), { recursive: true });
+for (const f of data.druckFiles) copyFileSync(join(root, "brand/druck", f), join(out, "assets/druck", f));
+for (const f of readdirSync(join(root, "brand/definitionen")).filter((f) => f.endsWith(".pdf")))
+  copyFileSync(join(root, "brand/definitionen", f), join(out, "assets/definitionen", f));
+for (const { path } of data.originalFiles) {
+  const dest = join(out, "assets/original", path);
+  mkdirSync(dirname(dest), { recursive: true });
+  copyFileSync(join(root, "brand/original", path), dest);
+}
 for (const f of data.svgFiles) copyFileSync(join(root, "brand/vektor", f), join(out, "assets/logos/svg", f));
 for (const f of data.rasterFiles) copyFileSync(join(root, "brand/bildschirm", f), join(out, "assets/logos/png", f));
 
