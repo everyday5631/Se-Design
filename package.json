@@ -15,14 +15,21 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "files": ["dist", "src"],
-  "sideEffects": ["*.css"],
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
     "clean": "rm -rf dist",
     "build:js": "node build.mjs",
     "build:types": "tsc -p tsconfig.build.json",
     "build": "npm run clean && npm run build:js && npm run build:types",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p site/tsconfig.json --noEmit",
+    "site:build": "node site/build.mjs",
+    "site:serve": "node site/serve.mjs"
   },
   "peerDependencies": {
     "react": ">=18",

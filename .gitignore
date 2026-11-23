@@ -3,3 +3,5 @@ dist/
 *.log
 .DS_Store
 .design-sync/cache/
+site-dist/
+.site-build/

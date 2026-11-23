@@ -69,3 +69,23 @@ stehen zusätzlich in `src/tokens-official.css`; die Tokens oben sind unverände
 **Offen:** Das Definitionen-Blatt nennt **Open Sans** und **Source Serif Pro** als Schriften,
 dieses System verwendet durchgängig Arial. Dunkelblau ist im Blatt mit `#233446` beschriftet,
 aber etwa `#00263F` gemalt; die Klärung beim Grafiker steht aus.
+
+## Dokumentationsseite
+
+Unter `site/` liegt die Dokumentationsseite des Design-Systems (Farben, Typografie,
+Abstände, Logo, Druckdaten, Definitionen, Originale, Komponenten). Farben,
+Schriftgrössen und Abstände werden beim Build direkt aus `src/tokens.css` und
+`src/tokens-official.css` gelesen; die Seite kann also nicht von den Tokens abweichen.
+Die Brand-Dateien aus `brand/` (Logos, Druck-PDF, Definitionen, Originale des Grafikers,
+zusammen rund 39 MB) werden mitgebaut und stehen auf der Seite zum Download.
+
+```bash
+npm run site:build   # baut nach site-dist/
+npm run site:serve   # Vorschau auf http://localhost:4173/
+```
+
+**Veröffentlichung:** `.github/workflows/pages.yml` läuft nur von Hand (Actions →
+«Dokumentationsseite» → Run workflow), nie automatisch. Vorher unter Settings → Pages
+die Quelle auf «GitHub Actions» stellen. Eine Pages-Seite ist öffentlich erreichbar,
+auch bei privatem Repository, und damit auch alle Downloads inklusive der Originale des
+Grafikers. Die Seiten sind mit `noindex` markiert, das ist aber kein Zugriffsschutz.
