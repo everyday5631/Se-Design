@@ -47,6 +47,10 @@ const data = {
     .filter((f) => f.endsWith(".dotx"))
     .sort()
     .map((f) => ({ file: f, size: statSync(join(root, "brand/vorlagen", f)).size })),
+  qmFiles: readdirSync(join(root, "brand/vorlagen-qm"))
+    .filter((f) => f.endsWith(".docx"))
+    .sort()
+    .map((f) => ({ file: f, size: statSync(join(root, "brand/vorlagen-qm", f)).size })),
 };
 
 // Alle Dateien unter brand/original rekursiv sammeln (relativ zu brand/original)
@@ -76,6 +80,11 @@ mkdirSync(join(out, "assets/vorlagen/vorschau"), { recursive: true });
 for (const { file } of data.vorlagenFiles) copyFileSync(join(root, "brand/vorlagen", file), join(out, "assets/vorlagen", file));
 for (const f of readdirSync(join(root, "brand/vorlagen/vorschau")).filter((f) => f.endsWith(".png")))
   copyFileSync(join(root, "brand/vorlagen/vorschau", f), join(out, "assets/vorlagen/vorschau", f));
+// QM-Vorlagen (Word, interne Dokumente) mit Vorschaubildern
+mkdirSync(join(out, "assets/vorlagen-qm/vorschau"), { recursive: true });
+for (const { file } of data.qmFiles) copyFileSync(join(root, "brand/vorlagen-qm", file), join(out, "assets/vorlagen-qm", file));
+for (const f of readdirSync(join(root, "brand/vorlagen-qm/vorschau")).filter((f) => f.endsWith(".png")))
+  copyFileSync(join(root, "brand/vorlagen-qm/vorschau", f), join(out, "assets/vorlagen-qm/vorschau", f));
 for (const f of data.svgFiles) copyFileSync(join(root, "brand/vektor", f), join(out, "assets/logos/svg", f));
 for (const f of data.rasterFiles) copyFileSync(join(root, "brand/bildschirm", f), join(out, "assets/logos/png", f));
 
