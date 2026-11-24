@@ -43,6 +43,10 @@ const data = {
   rasterFiles: readdirSync(join(root, "brand/bildschirm")).filter((f) => /\.(png|jpg)$/i.test(f)).sort(),
   druckFiles: readdirSync(join(root, "brand/druck")).filter((f) => f.endsWith(".pdf")).sort(),
   originalFiles: [],
+  vorlagenFiles: readdirSync(join(root, "brand/vorlagen"))
+    .filter((f) => f.endsWith(".dotx"))
+    .sort()
+    .map((f) => ({ file: f, size: statSync(join(root, "brand/vorlagen", f)).size })),
 };
 
 // Alle Dateien unter brand/original rekursiv sammeln (relativ zu brand/original)
@@ -67,6 +71,11 @@ for (const { path } of data.originalFiles) {
   mkdirSync(dirname(dest), { recursive: true });
   copyFileSync(join(root, "brand/original", path), dest);
 }
+// Beschilderungs-Vorlagen (Word) mit Vorschaubildern
+mkdirSync(join(out, "assets/vorlagen/vorschau"), { recursive: true });
+for (const { file } of data.vorlagenFiles) copyFileSync(join(root, "brand/vorlagen", file), join(out, "assets/vorlagen", file));
+for (const f of readdirSync(join(root, "brand/vorlagen/vorschau")).filter((f) => f.endsWith(".png")))
+  copyFileSync(join(root, "brand/vorlagen/vorschau", f), join(out, "assets/vorlagen/vorschau", f));
 for (const f of data.svgFiles) copyFileSync(join(root, "brand/vektor", f), join(out, "assets/logos/svg", f));
 for (const f of data.rasterFiles) copyFileSync(join(root, "brand/bildschirm", f), join(out, "assets/logos/png", f));
 

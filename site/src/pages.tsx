@@ -15,7 +15,7 @@ import {
   DocumentHeader,
   AppBar,
 } from "../../src/index";
-import { COLOR_GROUPS, NAV, ROLES } from "./content";
+import { COLOR_GROUPS, NAV, ROLES, VORLAGEN } from "./content";
 import type { ComponentDoc, CssVar, SiteData } from "./content";
 
 /* ---------- Hilfsfunktionen ---------- */
@@ -161,6 +161,7 @@ const TILE_TEXT: Record<string, string> = {
   druck: "Logos als Druck-PDF in 4C und Pantone.",
   definitionen: "Das Blatt «SONNHALDE Definitionen» des Grafikers mit allen Farbwerten.",
   originale: "Die unveränderte Lieferung des Grafikers (EPS, SVG, PNG, PDF).",
+  vorlagen: "Word-Vorlagen für Türschilder: Bewohnerzimmer (einzeln, Kacheln) und Büros.",
   komponenten: "React-Komponenten mit Live-Vorschau, Code und Eigenschaften.",
 };
 
@@ -729,6 +730,63 @@ const COMPONENTS: (ComponentDoc & { preview: React.ReactNode })[] = [
   },
 ];
 
+function Vorlagen({ data }: { data: SiteData }) {
+  const size = new Map(data.vorlagenFiles.map((f) => [f.file, f.size]));
+  const gruppen = ["Bewohnerschilder", "Büro"] as const;
+  return (
+    <>
+      <SectionHeading
+        as="h1"
+        eyebrow="Marke"
+        title="Vorlagen"
+        lead="Word-Vorlagen (.dotx) für die Türschilder im A6-Format. Ein Doppelklick auf die Datei öffnet ein neues Dokument, die Vorlage selbst bleibt unverändert."
+      />
+      <Notice tone="warning" title="Hinweis.">
+        Die Schilder werden auf A4 quer gedruckt, Seitenrand 0. Schrift ist durchgehend Arial,
+        das Logo ist als PNG eingebettet. Die gelbe und cyanfarbene Markierung hebt die
+        Platzhalter hervor.
+      </Notice>
+      {gruppen.map((g) => (
+        <section key={g}>
+          <h2 className="docs__h2">{g}</h2>
+          <div className="grid grid--2">
+            {VORLAGEN.filter((v) => v.gruppe === g).map((v) => (
+              <figure key={v.base} className="logo">
+                <div className="logo__stage logo__stage--light vorlage__stage">
+                  <img
+                    src={`../assets/vorlagen/vorschau/${v.base}.png`}
+                    alt={`Vorschau ${v.title}`}
+                    loading="lazy"
+                  />
+                </div>
+                <figcaption className="vorlage__cap">
+                  <div>
+                    <b>{v.title}</b>
+                    <p className="vorlage__meta">{v.layout}</p>
+                    <p className="vorlage__meta"><b>Felder:</b> {v.felder}</p>
+                    {v.hinweis ? <p className="vorlage__meta"><b>Hinweis:</b> {v.hinweis}</p> : null}
+                  </div>
+                  <span className="logo__links">
+                    <a href={`../assets/vorlagen/${v.base}.dotx`} download>
+                      .dotx{size.get(`${v.base}.dotx`) ? ` (${formatSize(size.get(`${v.base}.dotx`)!)})` : ""}
+                    </a>
+                  </span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      ))}
+      <h2 className="docs__h2">Benennung</h2>
+      <p className="docs__lead">
+        <code>2026_Vorlage_Beschilderung_Sonnhalde_&lt;Layout&gt;_A6_&lt;Zimmerart&gt;_V&lt;n&gt;.dotx</code>.
+        Layout ist «Einzeln» (ein Schild) oder «Kacheln» (2 × 2). Bei jeder neuen Fassung zählt die
+        Versionsnummer hoch.
+      </p>
+    </>
+  );
+}
+
 function Components() {
   return (
     <>
@@ -790,6 +848,7 @@ export function renderSite(data: SiteData): { path: string; html: string }[] {
     { path: "druck", title: "Druckdaten", body: <Druck data={data} /> },
     { path: "definitionen", title: "Definitionen", body: <Definitions /> },
     { path: "originale", title: "Originale", body: <Originals data={data} /> },
+    { path: "vorlagen", title: "Vorlagen", body: <Vorlagen data={data} /> },
     { path: "komponenten", title: "Komponenten", body: <Components /> },
   ];
   return pages.map((p) => ({

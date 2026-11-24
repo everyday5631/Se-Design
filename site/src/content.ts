@@ -18,6 +18,8 @@ export interface SiteData {
   druckFiles: string[];
   /** Dateien aus brand/original, relativer Pfad und Grösse in Bytes. */
   originalFiles: { path: string; size: number }[];
+  /** Word-Vorlagen (.dotx) aus brand/vorlagen, Dateiname und Grösse in Bytes. */
+  vorlagenFiles: { file: string; size: number }[];
 }
 
 export const ROLES: Record<string, string> = {
@@ -83,8 +85,60 @@ export const NAV = [
   { path: "druck", label: "Druckdaten" },
   { path: "definitionen", label: "Definitionen" },
   { path: "originale", label: "Originale" },
+  { path: "vorlagen", label: "Vorlagen" },
   { path: "komponenten", label: "Komponenten" },
 ] as const;
+
+export interface Vorlage {
+  /** Dateiname ohne Endung, wie in brand/vorlagen. */
+  base: string;
+  title: string;
+  gruppe: "Bewohnerschilder" | "Büro";
+  layout: string;
+  felder: string;
+  hinweis?: string;
+}
+
+/** Die Beschilderungs-Vorlagen. Reihenfolge = Reihenfolge auf der Seite. */
+export const VORLAGEN: Vorlage[] = [
+  {
+    base: "2026_Vorlage_Beschilderung_Sonnhalde_Einzeln_A6_Einerzimmer_V1",
+    title: "Einerzimmer, einzeln",
+    gruppe: "Bewohnerschilder",
+    layout: "Ein A6-Schild in der linken Spalte der A4-quer-Seite.",
+    felder: "Vorname Nachname · Nr. (Raum-ID)",
+  },
+  {
+    base: "2026_Vorlage_Beschilderung_Sonnhalde_Einzeln_A6_Doppelzimmer_V1",
+    title: "Doppelzimmer, einzeln",
+    gruppe: "Bewohnerschilder",
+    layout: "Ein A6-Schild in der linken Spalte der A4-quer-Seite.",
+    felder: "Vorname Nachname mit «Fenster» · Vorname Nachname mit «Tür» · Nr. (Raum-ID)",
+  },
+  {
+    base: "2026_Vorlage_Beschilderung_Sonnhalde_Kacheln_A6_Einerzimmer_V1",
+    title: "Einerzimmer, Kacheln",
+    gruppe: "Bewohnerschilder",
+    layout: "Vier A6-Schilder (2 × 2) auf einer A4-quer-Seite.",
+    felder: "Vorname Nachname · Nr. (Raum-ID), je Kachel",
+  },
+  {
+    base: "2026_Vorlage_Beschilderung_Sonnhalde_Kacheln_A6_Doppelzimmer_V1",
+    title: "Doppelzimmer, Kacheln",
+    gruppe: "Bewohnerschilder",
+    layout: "Vier A6-Schilder (2 × 2) auf einer A4-quer-Seite.",
+    felder: "Vorname Nachname mit «Fenster» · Vorname Nachname mit «Tür» · Nr. (Raum-ID), je Kachel",
+    hinweis: "Im Original ist bei «Nr. 1339» nur «133» gelb markiert, die letzte Ziffer nicht.",
+  },
+  {
+    base: "2026_Vorlage_Beschilderung_Sonnhalde_Einzeln_A6_Buero_V1",
+    title: "Büro, einzeln",
+    gruppe: "Büro",
+    layout: "Ein A6-Schild in der linken Spalte der A4-quer-Seite, mit Rahmen.",
+    felder: "Büro Bezeichnung · bis zu drei Personen (Vorname Nachname, Arbeitstage, optional Arbeitszeit)",
+    hinweis: "Die Namen und Arbeitstage im Original sind durch Platzhalter ersetzt.",
+  },
+];
 
 export interface PropDoc {
   name: string;

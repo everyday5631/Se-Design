@@ -73,11 +73,11 @@ aber etwa `#00263F` gemalt; die Klärung beim Grafiker steht aus.
 ## Dokumentationsseite
 
 Unter `site/` liegt die Dokumentationsseite des Design-Systems (Farben, Typografie,
-Abstände, Logo, Druckdaten, Definitionen, Originale, Komponenten). Farben,
+Abstände, Logo, Druckdaten, Definitionen, Originale, Vorlagen, Komponenten). Farben,
 Schriftgrössen und Abstände werden beim Build direkt aus `src/tokens.css` und
 `src/tokens-official.css` gelesen; die Seite kann also nicht von den Tokens abweichen.
 Die Brand-Dateien aus `brand/` (Logos, Druck-PDF, Definitionen, Originale des Grafikers,
-zusammen rund 39 MB) werden mitgebaut und stehen auf der Seite zum Download.
+Beschilderungs-Vorlagen, zusammen rund 40 MB) werden mitgebaut und stehen auf der Seite zum Download.
 
 ```bash
 npm run site:build   # baut nach site-dist/
