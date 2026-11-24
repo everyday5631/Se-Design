@@ -11,6 +11,7 @@ Sonnhalde-Design-Systems (Artifact).
 | `bildschirm/` | 20 PNG/JPG, einheitlich benannt, byte-identisch zur Lieferung |
 | `druck/` | 26 PDF (4C und Pantone), aus den EPS umgewandelt (Ghostscript) |
 | `definitionen/` | «SONNHALDE Definitionen» (Logos, Farben, Schriften) |
+| `vorlagen/` | 5 Word-Vorlagen (.dotx) für Türschilder (Bewohnerzimmer, Büro) mit Vorschaubildern |
 
 Jede Gruppe hat eine eigene README mit der Zuordnung von Datei, Farben, Untergrund und
 Original. Die offiziellen Farbwerte stehen zusätzlich in `src/tokens-official.css`

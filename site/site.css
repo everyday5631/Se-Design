@@ -110,3 +110,10 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .9em; b
   .docs__main { padding: var(--sonn-space-5) var(--sonn-space-4); }
   .specimen { flex-direction: column; align-items: flex-start; }
 }
+
+/* Vorlagen */
+.vorlage__stage { height: auto; background: var(--sonn-cream-sink); }
+.vorlage__stage img { width: 100%; height: auto; border: 1px solid var(--sonn-line); background: #fff; }
+.vorlage__cap { align-items: flex-start; }
+.vorlage__cap .logo__links { white-space: nowrap; }
+.vorlage__meta { margin: var(--sonn-space-1) 0 0; color: var(--sonn-stone); font-size: var(--sonn-size-label); }
