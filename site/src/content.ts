@@ -20,6 +20,8 @@ export interface SiteData {
   originalFiles: { path: string; size: number }[];
   /** Word-Vorlagen (.dotx) aus brand/vorlagen, Dateiname und Grösse in Bytes. */
   vorlagenFiles: { file: string; size: number }[];
+  /** QM-Vorlagen (.docx) aus brand/vorlagen-qm, Dateiname und Grösse in Bytes. */
+  qmFiles: { file: string; size: number }[];
 }
 
 export const ROLES: Record<string, string> = {
@@ -137,6 +139,39 @@ export const VORLAGEN: Vorlage[] = [
     layout: "Ein A6-Schild in der linken Spalte der A4-quer-Seite, mit Rahmen.",
     felder: "Büro Bezeichnung · bis zu drei Personen (Vorname Nachname, Arbeitstage, optional Arbeitszeit)",
     hinweis: "Die Namen und Arbeitstage im Original sind durch Platzhalter ersetzt.",
+  },
+];
+
+export interface QmVorlage {
+  /** Dateiname ohne Endung, wie in brand/vorlagen-qm. */
+  base: string;
+  /** Dateiname des Vorschaubilds in brand/vorlagen-qm/vorschau. */
+  vorschau: string;
+  title: string;
+  layout: string;
+  felder: string;
+  hinweis?: string;
+}
+
+/** Die QM-Vorlagen für interne Dokumente. Reihenfolge = Reihenfolge auf der Seite. */
+export const QM_VORLAGEN: QmVorlage[] = [
+  {
+    base: "Vorlage_QM_Hoch",
+    vorschau: "Vorlage_QM_Hoch_V1.png",
+    title: "QM-Vorlage hoch",
+    layout: "A4 hoch, Seitenrand 12.7 mm.",
+    felder:
+      "Kopf: Dokumententitel · Gültig ab · Version. Fuss: Dokumentnummer · Ersteller in Funktion · Zuständiger Vorgesetzter in Funktion · Freigegeben · Seite",
+    hinweis: "Die Fusszeile trägt als Beispiel «830 / QM / VORLAGE».",
+  },
+  {
+    base: "Vorlage_QM_Quer",
+    vorschau: "Vorlage_QM_Quer_V1.png",
+    title: "QM-Vorlage quer",
+    layout: "A4 quer, Seitenrand 12.7 mm.",
+    felder:
+      "Kopf: Dokumententitel · Gültig ab · Version. Fuss: Pfad Ordner (Ablage) · Ersteller in Funktion · Zuständiger Vorgesetzter in Funktion · Freigegeben · Seite",
+    hinweis: "Beispielzeile im Text: «Schriftart Arial 10, Absatz 14».",
   },
 ];
 

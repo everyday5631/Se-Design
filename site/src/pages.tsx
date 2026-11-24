@@ -15,7 +15,7 @@ import {
   DocumentHeader,
   AppBar,
 } from "../../src/index";
-import { COLOR_GROUPS, NAV, ROLES, VORLAGEN } from "./content";
+import { COLOR_GROUPS, NAV, QM_VORLAGEN, ROLES, VORLAGEN } from "./content";
 import type { ComponentDoc, CssVar, SiteData } from "./content";
 
 /* ---------- Hilfsfunktionen ---------- */
@@ -161,7 +161,7 @@ const TILE_TEXT: Record<string, string> = {
   druck: "Logos als Druck-PDF in 4C und Pantone.",
   definitionen: "Das Blatt «SONNHALDE Definitionen» des Grafikers mit allen Farbwerten.",
   originale: "Die unveränderte Lieferung des Grafikers (EPS, SVG, PNG, PDF).",
-  vorlagen: "Word-Vorlagen für Türschilder: Bewohnerzimmer (einzeln, Kacheln) und Büros.",
+  vorlagen: "Word-Vorlagen: QM-Vorlagen für interne Dokumente (hoch, quer) und Türschilder.",
   komponenten: "React-Komponenten mit Live-Vorschau, Code und Eigenschaften.",
 };
 
@@ -732,6 +732,7 @@ const COMPONENTS: (ComponentDoc & { preview: React.ReactNode })[] = [
 
 function Vorlagen({ data }: { data: SiteData }) {
   const size = new Map(data.vorlagenFiles.map((f) => [f.file, f.size]));
+  const qmSize = new Map(data.qmFiles.map((f) => [f.file, f.size]));
   const gruppen = ["Bewohnerschilder", "Büro"] as const;
   return (
     <>
@@ -739,8 +740,46 @@ function Vorlagen({ data }: { data: SiteData }) {
         as="h1"
         eyebrow="Marke"
         title="Vorlagen"
-        lead="Word-Vorlagen (.dotx) für die Türschilder im A6-Format. Ein Doppelklick auf die Datei öffnet ein neues Dokument, die Vorlage selbst bleibt unverändert."
+        lead="Word-Vorlagen der SONNHALDE: die QM-Vorlagen für interne Dokumente und die Vorlagen für Türschilder."
       />
+      <h2 className="docs__h2">Interne Dokumente (QM)</h2>
+      <Notice tone="info" title="Pflicht.">
+        Für interne Dokumente muss eine der beiden QM-Vorlagen verwendet werden. Sie gelten
+        ausschliesslich für interne Zwecke, sind schwarz-weiss und in Arial. Es sind normale
+        Word-Dateien (.docx): vor dem Ausfüllen als Kopie unter neuem Namen speichern, damit das
+        Original unverändert bleibt.
+      </Notice>
+      <div className="grid grid--2">
+        {QM_VORLAGEN.map((v) => (
+          <figure key={v.base} className="logo">
+            <div className="logo__stage logo__stage--light vorlage__stage">
+              <img
+                src={`../assets/vorlagen-qm/vorschau/${v.vorschau}`}
+                alt={`Vorschau ${v.title}`}
+                loading="lazy"
+              />
+            </div>
+            <figcaption className="vorlage__cap">
+              <div>
+                <b>{v.title}</b>
+                <p className="vorlage__meta">{v.layout}</p>
+                <p className="vorlage__meta"><b>Felder:</b> {v.felder}</p>
+                {v.hinweis ? <p className="vorlage__meta"><b>Hinweis:</b> {v.hinweis}</p> : null}
+              </div>
+              <span className="logo__links">
+                <a href={`../assets/vorlagen-qm/${v.base}.docx`} download>
+                  .docx{qmSize.get(`${v.base}.docx`) ? ` (${formatSize(qmSize.get(`${v.base}.docx`)!)})` : ""}
+                </a>
+              </span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <h2 className="docs__h2">Türschilder</h2>
+      <p className="docs__lead">
+        Word-Vorlagen (.dotx) für die Türschilder im A6-Format. Ein Doppelklick auf die Datei öffnet
+        ein neues Dokument, die Vorlage selbst bleibt unverändert.
+      </p>
       <Notice tone="warning" title="Hinweis.">
         Die Schilder werden auf A4 quer gedruckt, Seitenrand 0. Schrift ist durchgehend Arial,
         das Logo ist als PNG eingebettet. Die gelbe und cyanfarbene Markierung hebt die
@@ -748,7 +787,7 @@ function Vorlagen({ data }: { data: SiteData }) {
       </Notice>
       {gruppen.map((g) => (
         <section key={g}>
-          <h2 className="docs__h2">{g}</h2>
+          <h3 className="docs__h3">{g}</h3>
           <div className="grid grid--2">
             {VORLAGEN.filter((v) => v.gruppe === g).map((v) => (
               <figure key={v.base} className="logo">
