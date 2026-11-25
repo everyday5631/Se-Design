@@ -36,5 +36,10 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site-dist
+      # deploy-pages fragt das Artefakt nur Sekundenbruchteile nach dem Upload ab.
+      # GitHubs Artefakt-Liste ist dann teils noch leer ("Found 0 artifact(s)").
+      # Eine kurze Wartezeit verhindert diesen Fehler.
+      - name: Warten, bis das Artefakt abrufbar ist
+        run: sleep 30
       - id: deployment
         uses: actions/deploy-pages@v4
