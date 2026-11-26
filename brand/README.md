@@ -13,6 +13,7 @@ Sonnhalde-Design-Systems (Artifact).
 | `definitionen/` | «SONNHALDE Definitionen» (Logos, Farben, Schriften) |
 | `vorlagen/` | 5 Word-Vorlagen (.dotx) für Türschilder (Bewohnerzimmer, Büro) mit Vorschaubildern |
 | `vorlagen-qm/` | 2 QM-Vorlagen (.docx, A4 hoch und quer) für interne Dokumente mit Vorschaubildern — Pflicht für interne Dokumente |
+| `fotobox-hintergruende/` | 3 Hintergrundbilder (JPG, 4:3) in den Sonnhalde-Farben für die Fotobox-App, Entwurf (nicht vom Grafiker) |
 
 Jede Gruppe hat eine eigene README mit der Zuordnung von Datei, Farben, Untergrund und
 Original. Die offiziellen Farbwerte stehen zusätzlich in `src/tokens-official.css`
