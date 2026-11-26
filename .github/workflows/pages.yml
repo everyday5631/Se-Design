@@ -1,28 +1,38 @@
-# Veroeffentlicht die Dokumentationsseite (site/) auf GitHub Pages.
-# Bewusst NUR manuell ausloesbar (Actions -> "Dokumentationsseite" -> Run workflow):
-# Die Seite ist vorerst nicht oeffentlich. Pages ist im Repo-Setting zuerst auf
-# "GitHub Actions" zu stellen. Hinweis: Eine Pages-Seite ist oeffentlich erreichbar,
-# auch wenn das Repository privat ist (ausser bei GitHub Enterprise Cloud).
+# Baut die Dokumentationsseite (site/) und veroeffentlicht sie auf GitHub Pages.
+# - Push auf main (also nach dem Merge eines PR), der brand/, src/ oder site/ aendert: bauen und veroeffentlichen.
+# - Pull Request: nur bauen und pruefen (u. a. ob jeder Ordner unter brand/ eine Kategorie hat), nichts veroeffentlichen.
+# - Von Hand: Actions -> "Dokumentationsseite" -> Run workflow.
+# Einmalig: Settings -> Pages -> Source auf "GitHub Actions" stellen.
+# Hinweis: Eine Pages-Seite ist oeffentlich erreichbar, auch wenn das Repository privat ist
+# (ausser bei GitHub Enterprise Cloud). Das gilt auch fuer alle Downloads auf der Seite.
 name: Dokumentationsseite
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "brand/**"
+      - "src/**"
+      - "site/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    paths:
+      - "brand/**"
+      - "src/**"
+      - "site/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,11 +41,29 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
-      - run: npm run site:build
+      - name: Seite bauen (bricht bei Ordnern ohne Kategorie oder Dateien ohne Eintrag ab)
+        run: npm run site:build
       - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
       - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
         with:
           path: site-dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       # deploy-pages fragt das Artefakt nur Sekundenbruchteile nach dem Upload ab.
       # GitHubs Artefakt-Liste ist dann teils noch leer ("Found 0 artifact(s)").
       # Eine kurze Wartezeit verhindert diesen Fehler.

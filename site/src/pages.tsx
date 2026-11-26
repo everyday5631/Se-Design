@@ -15,8 +15,8 @@ import {
   DocumentHeader,
   AppBar,
 } from "../../src/index";
-import { COLOR_GROUPS, NAV, QM_VORLAGEN, ROLES, VORLAGEN } from "./content";
-import type { ComponentDoc, CssVar, SiteData } from "./content";
+import { BASE_NAV, COLOR_GROUPS, QM_VORLAGEN, ROLES, VORLAGEN } from "./content";
+import type { ComponentDoc, CssVar, NavItem, Sammlung, SiteData } from "./content";
 
 /* ---------- Hilfsfunktionen ---------- */
 
@@ -65,6 +65,9 @@ document.addEventListener("click", function (e) {
   };
   if (navigator.clipboard) navigator.clipboard.writeText(text).then(done);
 });`;
+
+/** Navigation inkl. Sammlungs-Seiten; wird in renderSite gesetzt. */
+let NAV: NavItem[] = BASE_NAV;
 
 interface LayoutProps {
   path: string;
@@ -135,7 +138,7 @@ function Overview() {
       <div className="grid grid--3">
         {NAV.filter((n) => n.path).map((n) => (
           <a key={n.path} className="tile" href={`${n.path}/`}>
-            <InfoCard title={n.label}>{TILE_TEXT[n.path]}</InfoCard>
+            <InfoCard title={n.label}>{TILE_TEXT[n.path] ?? ""}</InfoCard>
           </a>
         ))}
       </div>
@@ -153,6 +156,7 @@ function Overview() {
   );
 }
 
+/** Kacheltexte der festen Seiten; Sammlungen bringen ihren Text aus brand/kategorien.json mit. */
 const TILE_TEXT: Record<string, string> = {
   farben: "Grundfarben, Stützfarben, Signalfarben und die offiziellen Werte des Grafikers.",
   typografie: "Arial und die Schriftgrössen-Skala.",
@@ -826,6 +830,70 @@ function Vorlagen({ data }: { data: SiteData }) {
   );
 }
 
+function Sammlungsseite({ s }: { s: Sammlung }) {
+  const isImage = (f: string) => /\.(png|jpe?g|webp|svg)$/i.test(f);
+  const bilder = s.files.filter((f) => isImage(f.file));
+  const andere = s.files.filter((f) => !isImage(f.file));
+  const href = (f: string) => `../assets/${enc(s.ordner)}/${encodeURIComponent(f)}`;
+  return (
+    <>
+      <SectionHeading as="h1" eyebrow="Marke" title={s.titel} lead={s.lead} />
+      {s.hinweis ? (
+        <Notice tone="warning" title={s.hinweis.titel}>
+          {s.hinweis.text}
+        </Notice>
+      ) : null}
+      {bilder.length > 0 ? (
+        <div className="grid grid--3">
+          {bilder.map((b) => (
+            <figure key={b.file} className="logo">
+              <div className="logo__stage logo__stage--light vorlage__stage">
+                <img src={href(b.file)} alt={b.file.replace(/\.[^.]+$/, "")} loading="lazy" />
+              </div>
+              <figcaption className="vorlage__cap">
+                <div>
+                  <b>{b.file.replace(/\.[^.]+$/, "")}</b>
+                </div>
+                <span className="logo__links">
+                  <a href={href(b.file)} download>
+                    {b.file.split(".").pop()!.toUpperCase()} ({formatSize(b.size)})
+                  </a>
+                </span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      ) : null}
+      {andere.length > 0 ? (
+        <FileTable rows={andere.map((f) => ({ name: f.file, href: href(f.file), size: f.size }))} />
+      ) : null}
+    </>
+  );
+}
+
+/** Bricht den Build ab, wenn Dateien oder Seiten ohne Eintrag dastehen (statt sie still wegzulassen). */
+function pruefeVollstaendigkeit(data: SiteData) {
+  const fehler: string[] = [];
+  const bekannt = new Set(VORLAGEN.map((v) => `${v.base}.dotx`));
+  for (const f of data.vorlagenFiles)
+    if (!bekannt.has(f.file))
+      fehler.push(`brand/vorlagen/${f.file} fehlt in VORLAGEN (site/src/content.ts): Titel, Layout, Felder ergänzen. Vorschaubild nach brand/vorlagen/vorschau/.`);
+  const qmBekannt = new Set(QM_VORLAGEN.map((v) => `${v.base}.docx`));
+  for (const f of data.qmFiles)
+    if (!qmBekannt.has(f.file))
+      fehler.push(`brand/vorlagen-qm/${f.file} fehlt in QM_VORLAGEN (site/src/content.ts): Titel, Layout, Felder, Vorschau ergänzen.`);
+  const feste = new Set(BASE_NAV.map((n) => n.path));
+  for (const [ordner, k] of Object.entries(data.kategorien))
+    if (k.typ !== "sammlung" && !feste.has(k.seite))
+      fehler.push(`brand/kategorien.json: "${ordner}" verweist auf die Seite "${k.seite}", die es nicht gibt. Bestehende Seiten: ${[...feste].filter(Boolean).join(", ")}.`);
+  for (const s of data.sammlungen)
+    if (feste.has(s.seite)) fehler.push(`brand/kategorien.json: Die Sammlung "${s.ordner}" nutzt den Seitennamen "${s.seite}", der schon vergeben ist.`);
+  if (fehler.length) {
+    for (const m of fehler) console.error(`::error::${m}`);
+    throw new Error(`Seite unvollständig:\n- ${fehler.join("\n- ")}`);
+  }
+}
+
 function Components() {
   return (
     <>
@@ -878,6 +946,15 @@ export function App() {
 
 export function renderSite(data: SiteData): { path: string; html: string }[] {
   CREAM_REF.vars = data.vars;
+  pruefeVollstaendigkeit(data);
+  // Sammlungs-Seiten (brand/kategorien.json) kommen vor «Komponenten» in die Navigation
+  const komponenten = BASE_NAV[BASE_NAV.length - 1];
+  NAV = [
+    ...BASE_NAV.slice(0, -1),
+    ...data.sammlungen.map((s) => ({ path: s.seite, label: s.titel })),
+    komponenten,
+  ];
+  for (const s of data.sammlungen) TILE_TEXT[s.seite] = s.kachel;
   const pages: { path: string; title: string; body: React.ReactNode }[] = [
     { path: "", title: "Übersicht", body: <Overview /> },
     { path: "farben", title: "Farben", body: <Colors data={data} /> },
@@ -888,6 +965,7 @@ export function renderSite(data: SiteData): { path: string; html: string }[] {
     { path: "definitionen", title: "Definitionen", body: <Definitions /> },
     { path: "originale", title: "Originale", body: <Originals data={data} /> },
     { path: "vorlagen", title: "Vorlagen", body: <Vorlagen data={data} /> },
+    ...data.sammlungen.map((s) => ({ path: s.seite, title: s.titel, body: <Sammlungsseite s={s} /> })),
     { path: "komponenten", title: "Komponenten", body: <Components /> },
   ];
   return pages.map((p) => ({

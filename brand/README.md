@@ -18,3 +18,6 @@ Sonnhalde-Design-Systems (Artifact).
 Jede Gruppe hat eine eigene README mit der Zuordnung von Datei, Farben, Untergrund und
 Original. Die offiziellen Farbwerte stehen zusätzlich in `src/tokens-official.css`
 (Variablen `--sonn-official-*`); sie ist bewusst nicht in `styles.css` eingebunden.
+
+**Neuer Ordner?** Jeder Ordner hier braucht einen Eintrag in `kategorien.json` (zugehörige Seite der
+Dokumentationsseite, oder `"typ": "sammlung"` für eine eigene Seite). Sonst schlägt der Seiten-Build fehl.

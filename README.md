@@ -84,8 +84,13 @@ npm run site:build   # baut nach site-dist/
 npm run site:serve   # Vorschau auf http://localhost:4173/
 ```
 
-**Veröffentlichung:** `.github/workflows/pages.yml` läuft nur von Hand (Actions →
-«Dokumentationsseite» → Run workflow), nie automatisch. Vorher unter Settings → Pages
-die Quelle auf «GitHub Actions» stellen. Eine Pages-Seite ist öffentlich erreichbar,
-auch bei privatem Repository, und damit auch alle Downloads inklusive der Originale des
+**Veröffentlichung:** `.github/workflows/pages.yml` baut und veröffentlicht die Seite automatisch,
+sobald ein Merge in `main` etwas unter `brand/`, `src/` oder `site/` ändert. In Pull Requests wird
+nur gebaut und geprüft. Von Hand geht es weiterhin über Actions → «Dokumentationsseite» → Run workflow.
+Einmalig unter Settings → Pages die Quelle auf «GitHub Actions» stellen. Eine Pages-Seite ist öffentlich
+erreichbar, auch bei privatem Repository, und damit auch alle Downloads inklusive der Originale des
 Grafikers. Die Seiten sind mit `noindex` markiert, das ist aber kein Zugriffsschutz.
+
+**Neue Inhalte:** Jeder Ordner unter `brand/` braucht einen Eintrag in `brand/kategorien.json`
+(Kategorie = Seite). Ordner mit `"typ": "sammlung"` bekommen automatisch eine eigene Seite, Beispiel
+`fotobox-hintergruende`. Ohne Eintrag bricht der Build ab. Die Regeln für Claude stehen in `CLAUDE.md`.

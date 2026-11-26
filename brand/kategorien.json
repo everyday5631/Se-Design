@@ -1,0 +1,23 @@
+{
+  "_hinweis": "Jeder Ordner unter brand/ braucht hier einen Eintrag (Kategorie = Seite auf der Dokumentationsseite). Fehlt einer, bricht der Seiten-Build ab. Siehe CLAUDE.md.",
+  "ordner": {
+    "original": { "seite": "originale" },
+    "vektor": { "seite": "logo" },
+    "bildschirm": { "seite": "logo" },
+    "druck": { "seite": "druck" },
+    "definitionen": { "seite": "definitionen" },
+    "vorlagen": { "seite": "vorlagen" },
+    "vorlagen-qm": { "seite": "vorlagen" },
+    "fotobox-hintergruende": {
+      "typ": "sammlung",
+      "seite": "fotobox",
+      "titel": "Fotobox",
+      "kachel": "Hintergrundbilder für die Fotobox-App (Entwurf).",
+      "lead": "Hintergrundbilder für die Sonnhalde-Fotobox (Android-App): Die App stellt die Personen auf dem Foto frei und setzt sie vor eines dieser Bilder, wie ein virtueller Hintergrund bei Teams. JPEG, 2000 × 1500 px (4:3).",
+      "hinweis": {
+        "titel": "Entwurf.",
+        "text": "Die Bilder stammen nicht vom Grafiker. Sie wurden aus der Bildmarke und den Farben des Design-Systems erstellt (Verlauf, Bildmarke als Wasserzeichen) und sind noch nicht freigegeben. Die Farbverläufe sind nicht Teil der offiziellen Farbdefinitionen."
+      }
+    }
+  }
+}

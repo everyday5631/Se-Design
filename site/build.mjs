@@ -10,6 +10,29 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const out = join(root, "site-dist");
 const tmp = join(root, ".site-build");
 
+// 0) Kategorien: jeder Ordner unter brand/ muss in brand/kategorien.json stehen (und umgekehrt).
+//    So landet nichts Neues unbemerkt ausserhalb der Seite. Fehler erscheinen im Pull Request.
+const kategorien = JSON.parse(readFileSync(join(root, "brand/kategorien.json"), "utf8")).ordner;
+const brandFolders = readdirSync(join(root, "brand"), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort();
+const kategorieFehler = [
+  ...brandFolders
+    .filter((d) => !kategorien[d])
+    .map((d) => `brand/${d}/ hat keine Kategorie. In brand/kategorien.json unter "ordner" eintragen: "${d}": { "seite": "<bestehende Seite>" } oder als eigene Seite mit "typ": "sammlung" (siehe CLAUDE.md).`),
+  ...Object.keys(kategorien)
+    .filter((d) => !brandFolders.includes(d))
+    .map((d) => `brand/kategorien.json nennt "${d}", aber brand/${d}/ gibt es nicht.`),
+  ...Object.entries(kategorien)
+    .filter(([, k]) => !k.seite)
+    .map(([d]) => `brand/kategorien.json: "${d}" hat kein Feld "seite".`),
+  ...Object.entries(kategorien)
+    .filter(([, k]) => k.typ === "sammlung" && !(k.titel && k.lead))
+    .map(([d]) => `brand/kategorien.json: Sammlung "${d}" braucht "titel" und "lead".`),
+];
+if (kategorieFehler.length) {
+  for (const m of kategorieFehler) console.error(`::error file=brand/kategorien.json::${m}`);
+  process.exit(1);
+}
+
 rmSync(out, { recursive: true, force: true });
 rmSync(tmp, { recursive: true, force: true });
 mkdirSync(join(out, "assets", "logos", "svg"), { recursive: true });
@@ -53,6 +76,28 @@ const data = {
     .map((f) => ({ file: f, size: statSync(join(root, "brand/vorlagen-qm", f)).size })),
 };
 
+// Sammlungen: Ordner mit "typ": "sammlung" bekommen automatisch eine eigene Seite (Bilder + Downloads)
+data.kategorien = kategorien;
+data.sammlungen = Object.entries(kategorien)
+  .filter(([, k]) => k.typ === "sammlung")
+  .map(([ordner, k]) => ({
+    ordner,
+    seite: k.seite,
+    titel: k.titel,
+    kachel: k.kachel ?? "",
+    lead: k.lead,
+    hinweis: k.hinweis,
+    files: readdirSync(join(root, "brand", ordner))
+      .filter((f) => !/^readme(\.md)?$/i.test(f) && statSync(join(root, "brand", ordner, f)).isFile())
+      .sort()
+      .map((f) => ({ file: f, size: statSync(join(root, "brand", ordner, f)).size })),
+  }));
+const seitenIds = new Set(data.sammlungen.map((s) => s.seite));
+if (seitenIds.size !== data.sammlungen.length) {
+  console.error("::error file=brand/kategorien.json::Zwei Sammlungen verwenden dieselbe \"seite\".");
+  process.exit(1);
+}
+
 // Alle Dateien unter brand/original rekursiv sammeln (relativ zu brand/original)
 function walk(dir, rel = "") {
   for (const e of readdirSync(join(dir, rel), { withFileTypes: true })) {
@@ -85,6 +130,11 @@ mkdirSync(join(out, "assets/vorlagen-qm/vorschau"), { recursive: true });
 for (const { file } of data.qmFiles) copyFileSync(join(root, "brand/vorlagen-qm", file), join(out, "assets/vorlagen-qm", file));
 for (const f of readdirSync(join(root, "brand/vorlagen-qm/vorschau")).filter((f) => f.endsWith(".png")))
   copyFileSync(join(root, "brand/vorlagen-qm/vorschau", f), join(out, "assets/vorlagen-qm/vorschau", f));
+// Sammlungen (z. B. Fotobox-Hintergruende)
+for (const s of data.sammlungen) {
+  mkdirSync(join(out, "assets", s.ordner), { recursive: true });
+  for (const { file } of s.files) copyFileSync(join(root, "brand", s.ordner, file), join(out, "assets", s.ordner, file));
+}
 for (const f of data.svgFiles) copyFileSync(join(root, "brand/vektor", f), join(out, "assets/logos/svg", f));
 for (const f of data.rasterFiles) copyFileSync(join(root, "brand/bildschirm", f), join(out, "assets/logos/png", f));
 

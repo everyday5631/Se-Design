@@ -22,6 +22,21 @@ export interface SiteData {
   vorlagenFiles: { file: string; size: number }[];
   /** QM-Vorlagen (.docx) aus brand/vorlagen-qm, Dateiname und Grösse in Bytes. */
   qmFiles: { file: string; size: number }[];
+  /** Eintraege aus brand/kategorien.json (Ordnername -> Seite). */
+  kategorien: Record<string, { seite: string; typ?: string }>;
+  /** Ordner mit "typ": "sammlung": bekommen automatisch eine eigene Seite. */
+  sammlungen: Sammlung[];
+}
+
+export interface Sammlung {
+  ordner: string;
+  /** Pfad der Seite, z. B. „fotobox". */
+  seite: string;
+  titel: string;
+  kachel: string;
+  lead: string;
+  hinweis?: { titel: string; text: string };
+  files: { file: string; size: number }[];
 }
 
 export const ROLES: Record<string, string> = {
@@ -78,7 +93,13 @@ export const COLOR_GROUPS: { id: string; title: string; lead: string; names: str
   },
 ];
 
-export const NAV = [
+export interface NavItem {
+  path: string;
+  label: string;
+}
+
+/** Feste Seiten. Seiten fuer Sammlungen (brand/kategorien.json) kommen beim Build vor „Komponenten" dazu. */
+export const BASE_NAV: NavItem[] = [
   { path: "", label: "Übersicht" },
   { path: "farben", label: "Farben" },
   { path: "typografie", label: "Typografie" },
@@ -89,7 +110,7 @@ export const NAV = [
   { path: "originale", label: "Originale" },
   { path: "vorlagen", label: "Vorlagen" },
   { path: "komponenten", label: "Komponenten" },
-] as const;
+];
 
 export interface Vorlage {
   /** Dateiname ohne Endung, wie in brand/vorlagen. */
